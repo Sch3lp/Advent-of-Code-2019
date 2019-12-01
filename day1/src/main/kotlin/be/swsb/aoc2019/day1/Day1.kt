@@ -27,5 +27,4 @@ object Day1_1 {
 
     fun multipleModulesFuelCounterUpper(modules: List<Int>): Int = modules.sumBy { singleModuleFuelCounterUpper(it) }
     fun singleModuleFuelCounterUpper(moduleMass: Int): Int = Math.floorDiv(moduleMass, 3) - 2
-
 }

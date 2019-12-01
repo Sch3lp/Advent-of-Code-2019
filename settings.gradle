@@ -1,2 +1,3 @@
 rootProject.name = 'AoC2019'
+include 'day1'
 
