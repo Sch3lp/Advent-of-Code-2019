@@ -1,6 +1,7 @@
 package be.swsb.aoc2019.day1
 
-import be.swsb.aoc2019.common.Common.readFile
+import be.swsb.aoc2019.common.Common.parseLinesAs
+import be.swsb.aoc2019.common.Common.readLines
 import be.swsb.aoc2019.day1.Day1_1.multipleModulesFuelCounterUpper
 import be.swsb.aoc2019.day1.Day1_1.singleModuleFuelCounterUpper
 import org.assertj.core.api.Assertions.assertThat
@@ -15,7 +16,7 @@ class Day1Test {
     inner class Exercise1 {
         @Test
         fun `solve exercise 1`() {
-            val modules = readFile("actualInput.txt").map { Integer.parseInt(it) }
+            val modules = parseLinesAs("actualInput.txt", String::toInt)
             val result = multipleModulesFuelCounterUpper(modules)
 
             assertThat(result).isEqualTo(3380880)
@@ -40,7 +41,7 @@ class Day1Test {
     inner class Exercise2 {
         @Test
         fun `solve exercise 2`() {
-            val modules = readFile("actualInput.txt").map { Integer.parseInt(it) }
+            val modules = parseLinesAs("actualInput.txt", String::toInt)
             assertThat(Day1_2.sumOfAllFuelsPerModule(modules))
                     .isEqualTo(5068454)
         }

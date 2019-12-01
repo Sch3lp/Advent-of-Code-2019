@@ -1,6 +1,6 @@
 package be.swsb.aoc2019.common
 
-import be.swsb.aoc2019.common.Common.readFile
+import be.swsb.aoc2019.common.Common.parseLinesAs
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
@@ -11,9 +11,9 @@ class CommonTest {
     inner class FileReader {
         @Test
         internal fun `parseLines | can read lines as something`() {
-            val actual = readFile("input.txt")
+            val actual = parseLinesAs("input.txt", String::toInt)
 
-            assertThat(actual).containsExactly("12", "24")
+            assertThat(actual).containsExactly(12, 24)
         }
     }
 }
