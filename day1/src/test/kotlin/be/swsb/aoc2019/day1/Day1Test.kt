@@ -1,7 +1,7 @@
 package be.swsb.aoc2019.day1
 
+import be.swsb.aoc2019.common.Common.readFile
 import be.swsb.aoc2019.day1.Day1_1.multipleModulesFuelCounterUpper
-import be.swsb.aoc2019.day1.Day1_1.readFile
 import be.swsb.aoc2019.day1.Day1_1.singleModuleFuelCounterUpper
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Nested
@@ -15,7 +15,8 @@ class Day1Test {
     inner class Exercise1 {
         @Test
         fun `solve exercise 1`() {
-            val result = multipleModulesFuelCounterUpper(readFile("actualInput.txt"))
+            val modules = readFile("actualInput.txt").map { Integer.parseInt(it) }
+            val result = multipleModulesFuelCounterUpper(modules)
 
             assertThat(result).isEqualTo(3380880)
         }
@@ -35,18 +36,13 @@ class Day1Test {
         }
     }
 
-    @Test
-    fun `Can read file line by line`() {
-        val actual = readFile("input.txt")
-
-        assertThat(actual).containsExactly(12, 24)
-    }
-
     @Nested
     inner class Exercise2 {
         @Test
         fun `solve exercise 2`() {
-            assertThat(Day1_2.sumOfAllFuelsPerModule(readFile("actualInput.txt"))).isEqualTo(5068454)
+            val modules = readFile("actualInput.txt").map { Integer.parseInt(it) }
+            assertThat(Day1_2.sumOfAllFuelsPerModule(modules))
+                    .isEqualTo(5068454)
         }
 
         @Test
