@@ -31,3 +31,28 @@ _Today I forked this repository in preparation of the start._
 ##### _01/12_
 
 Today I learned about using `tailrec` as a function modifier on recursive functions so the program doesn't blow the stack and compiles it into an iteration function.
+
+##### _04/12_
+
+Got stuck on a simple for each.
+
+Learned about using `by` as inheritance (see `Day2.IntCodes`)
+
+Three flavors of updating a value in a List:
+
+```kotlin
+_intCodes.toMutableList()
+    .apply {
+        this[instruction.destinationAddress] = _intCodes[instruction.parameterAddress1] * _intCodes[instruction.parameterAddress2]
+    }.toList()
+```
+Here's code with _intCodes as a MutableList:
+```kotlin
+_intCodes[opcodeStatement.destinationPosition] = _intCodes[opcodeStatement.position1] * _intCodes[opcodeStatement.position2]
+```
+
+Is ths first flavor worth it if _intCodes is already wrapped in a SmartCollection.
+
+Another option would be to create an extension function on List: List.replace(index, newValue) to wrap `.toMutableList().apply{}.toList()` stuff.
+As suggested by _ICHBINI_.
+

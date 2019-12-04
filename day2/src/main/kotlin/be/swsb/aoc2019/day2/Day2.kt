@@ -16,6 +16,7 @@ fun solve(intCodes: List<Int>): Int {
 
     val opcodeStatements = parseInput(intCodes)
 
+    // Got stuck on this statement pretty hard, and it's just a simple for each
     var intCode = IntCodes(intCodes)
     opcodeStatements.forEach { opCodeStatement ->
         intCode = intCode.execute(opCodeStatement)

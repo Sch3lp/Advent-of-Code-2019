@@ -62,7 +62,7 @@ class Day2Test {
     }
 
     @Nested
-    inner class ExecutingOpcodeStatements {
+    inner class ExecutingInstructions {
         @Test
         internal fun `execute | applying Addition, applies addition on the given positions and returns an updated Intcodes`() {
             val intCodes = IntCodes(listOf(1, 9, 10, 3, 2, 3, 11, 0, 99, 30, 40, 50))
