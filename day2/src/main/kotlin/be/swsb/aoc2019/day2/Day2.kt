@@ -69,7 +69,7 @@ sealed class Instruction {
 
     companion object {
         fun fromAListOfMax4Ints(maxFourIntCodes: List<Int>): Instruction {
-            if (maxFourIntCodes.size > 4) throw IllegalArgumentException("OpcodeStatements cannot be made from 4 Intcodes")
+            if (maxFourIntCodes.size > 4) throw IllegalArgumentException("An Instruction cannot be made from more than 4 Intcodes")
             return parse(maxFourIntCodes)
         }
 
