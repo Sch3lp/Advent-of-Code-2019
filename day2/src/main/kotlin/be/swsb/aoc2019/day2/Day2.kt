@@ -1,6 +1,6 @@
 package be.swsb.aoc2019.day2
 
-import be.swsb.aoc2019.day2.OpcodeStatement.Companion.fromAListOfMax4Ints
+import be.swsb.aoc2019.day2.Instruction.Companion.fromAListOfMax4Ints
 import java.lang.IllegalArgumentException
 
 
@@ -29,28 +29,28 @@ fun solve(intCodes: List<Int>): Int {
 data class IntCodes(private val _intCodes: List<Int>) : List<Int> by _intCodes {
 
     // Thanks userman2 for the `inline` explanation
-    fun execute(opcodeStatement: OpcodeStatement): IntCodes {
+    fun execute(instruction: Instruction): IntCodes {
         return this.let {
-            when (opcodeStatement) {
-                is OpcodeStatement.Addition -> add(opcodeStatement)
-                is OpcodeStatement.Multiplication -> multiply(opcodeStatement)
-                is OpcodeStatement.Halt -> IntCodes(mutableListOf(_intCodes[0]))
-                is OpcodeStatement.Noop -> IntCodes(_intCodes)
+            when (instruction) {
+                is Instruction.Addition -> add(instruction)
+                is Instruction.Multiplication -> multiply(instruction)
+                is Instruction.Halt -> IntCodes(mutableListOf(_intCodes[0]))
+                is Instruction.Noop -> IntCodes(_intCodes)
             }
         }
     }
 
-    private fun add(opcodeStatement: OpcodeStatement.Addition): IntCodes {
+    private fun add(instruction: Instruction.Addition): IntCodes {
         return IntCodes(_intCodes.toMutableList()
                 .apply {
-                    this[opcodeStatement.destinationPosition] = _intCodes[opcodeStatement.position1] + _intCodes[opcodeStatement.position2]
+                    this[instruction.destinationAddress] = _intCodes[instruction.parameterAddress1] + _intCodes[instruction.parameterAddress2]
                 }.toList())
     }
 
-    private fun multiply(opcodeStatement: OpcodeStatement.Multiplication): IntCodes {
+    private fun multiply(instruction: Instruction.Multiplication): IntCodes {
         return IntCodes(_intCodes.toMutableList()
                 .apply {
-                    this[opcodeStatement.destinationPosition] = _intCodes[opcodeStatement.position1] * _intCodes[opcodeStatement.position2]
+                    this[instruction.destinationAddress] = _intCodes[instruction.parameterAddress1] * _intCodes[instruction.parameterAddress2]
                 }.toList())
 //        here's code with _intCodes as a MutableList:
 //        _intCodes[opcodeStatement.destinationPosition] = _intCodes[opcodeStatement.position1] * _intCodes[opcodeStatement.position2]
@@ -60,19 +60,19 @@ data class IntCodes(private val _intCodes: List<Int>) : List<Int> by _intCodes {
     }
 }
 
-sealed class OpcodeStatement {
-    data class Addition(val position1: Int, val position2: Int, val destinationPosition: Int) : OpcodeStatement()
-    data class Multiplication(val position1: Int, val position2: Int, val destinationPosition: Int) : OpcodeStatement()
-    object Halt : OpcodeStatement()
-    object Noop : OpcodeStatement()
+sealed class Instruction {
+    data class Addition(val parameterAddress1: Int, val parameterAddress2: Int, val destinationAddress: Int) : Instruction()
+    data class Multiplication(val parameterAddress1: Int, val parameterAddress2: Int, val destinationAddress: Int) : Instruction()
+    object Halt : Instruction()
+    object Noop : Instruction()
 
     companion object {
-        fun fromAListOfMax4Ints(maxFourIntCodes: List<Int>): OpcodeStatement {
+        fun fromAListOfMax4Ints(maxFourIntCodes: List<Int>): Instruction {
             if (maxFourIntCodes.size > 4) throw IllegalArgumentException("OpcodeStatements cannot be made from 4 Intcodes")
             return parse(maxFourIntCodes)
         }
 
-        private fun parse(maxFourIntCodes: List<Int>): OpcodeStatement =
+        private fun parse(maxFourIntCodes: List<Int>): Instruction =
                 when (maxFourIntCodes[0]) {
                     1 -> Addition(maxFourIntCodes[1], maxFourIntCodes[2], maxFourIntCodes[3])
                     2 -> Multiplication(maxFourIntCodes[1], maxFourIntCodes[2], maxFourIntCodes[3])
@@ -83,5 +83,5 @@ sealed class OpcodeStatement {
 }
 
 // Thank you so much ICHBINI for the `.chunked` suggestion
-fun parseInput(intCodes: List<Int>): List<OpcodeStatement> = intCodes.chunked(4) { fromAListOfMax4Ints(it) }
+fun parseInput(intCodes: List<Int>): List<Instruction> = intCodes.chunked(4) { fromAListOfMax4Ints(it) }
 

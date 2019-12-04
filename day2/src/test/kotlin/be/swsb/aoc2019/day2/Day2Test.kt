@@ -1,8 +1,7 @@
 package be.swsb.aoc2019.day2
 
 import be.swsb.aoc2019.common.Common.csvLinesAs
-import be.swsb.aoc2019.common.Common.readLinesAs
-import be.swsb.aoc2019.day2.OpcodeStatement.*
+import be.swsb.aoc2019.day2.Instruction.*
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatExceptionOfType
 import org.junit.jupiter.api.Nested
@@ -19,40 +18,40 @@ class Day2Test {
         @Test
         internal fun `fromAListOfMax4Ints | cannot parse from a list of more than 4 Intcodes`() {
             assertThatExceptionOfType(IllegalArgumentException::class.java)
-                    .isThrownBy { OpcodeStatement.fromAListOfMax4Ints(listOf(1, 2, 3, 4, 5)) }
+                    .isThrownBy { Instruction.fromAListOfMax4Ints(listOf(1, 2, 3, 4, 5)) }
         }
 
         @Test
         internal fun `fromAListOfMax4Ints | an unknown Opcode is parsed to Noop`() {
-            val opcodeStatement = OpcodeStatement.fromAListOfMax4Ints(listOf(3, 2, 3, 4))
+            val opcodeStatement = Instruction.fromAListOfMax4Ints(listOf(3, 2, 3, 4))
 
             assertThat(opcodeStatement).isEqualTo(Noop)
         }
 
         @Test
         internal fun `fromAListOfMax4Ints | can parse into Addition when Opcode is 1`() {
-            val opcodeStatement = OpcodeStatement.fromAListOfMax4Ints(listOf(1, 2, 3, 4))
+            val opcodeStatement = Instruction.fromAListOfMax4Ints(listOf(1, 2, 3, 4))
 
             assertThat(opcodeStatement).isEqualTo(Addition(2, 3, 4))
         }
 
         @Test
         internal fun `fromAListOfMax4Ints | can parse into Multiplication when Opcode is 2`() {
-            val opcodeStatement = OpcodeStatement.fromAListOfMax4Ints(listOf(2, 2, 3, 4))
+            val opcodeStatement = Instruction.fromAListOfMax4Ints(listOf(2, 2, 3, 4))
 
             assertThat(opcodeStatement).isEqualTo(Multiplication(2, 3, 4))
         }
 
         @Test
         internal fun `fromAListOfMax4Ints | can parse into Halt when Opcode is 99`() {
-            val opcodeStatement = OpcodeStatement.fromAListOfMax4Ints(listOf(99, 2, 3))
+            val opcodeStatement = Instruction.fromAListOfMax4Ints(listOf(99, 2, 3))
 
             assertThat(opcodeStatement).isEqualTo(Halt)
         }
 
         @Test
         internal fun `parseInput | can parse input into OpcodeStatements`() {
-            val result: List<OpcodeStatement> = parseInput(listOf(1, 9, 10, 3, 2, 22, 33, 44, 99, 2))
+            val result: List<Instruction> = parseInput(listOf(1, 9, 10, 3, 2, 22, 33, 44, 99, 2))
 
             assertThat(result).containsExactly(
                     Addition(9, 10, 3),
@@ -123,7 +122,18 @@ class Day2Test {
     inner class Exercise2 {
         @Test
         fun `solve exercise 2`() {
-            val modules = readLinesAs("actualInput.txt", String::toInt)
+            val toModify = csvLinesAs("actualInput.txt", String::toInt)
+            for (noun in 0..99) {
+                for (verb in 0..99) {
+                    val modifiedIntCodes = toModify.toMutableList().apply {
+                        this[1] = noun
+                        this[2] = verb
+                    }
+                    if (solve(modifiedIntCodes) == 19690720) {
+                        println("Noun: $noun\nVerb: $verb\nSolution: ${(100 * noun) + verb}")
+                    }
+                }
+            }
         }
     }
 }
