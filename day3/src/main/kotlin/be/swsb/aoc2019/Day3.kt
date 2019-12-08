@@ -59,22 +59,27 @@ data class Position(val x: Int, val y: Int) {
     }
 }
 
-infix fun Position.until(position: Position): List<Position> {
+infix fun Position.until(other: Position): List<Position> {
     return when {
-        this.x != position.x && this.y != position.y -> {
+        this.x != other.x && this.y != other.y -> {
             throw java.lang.IllegalArgumentException("Cannot get a range for unrelated axis")
         }
-        this == position -> {
+        this == other -> {
             listOf(this)
         }
-        this.x == position.x -> {
-            (this.y range position.y).map { at(this.x, it) }
+        this.x == other.x -> {
+            (this.y range other.y).map { at(this.x, it) }
         }
-        this.y == position.y -> {
-            (this.x range position.x).map { at(it, this.y) }
+        this.y == other.y -> {
+            (this.x range other.x).map { at(it, this.y) }
         }
         else -> throw java.lang.IllegalArgumentException("I think we're not supposed to end up here")
     }
+}
+
+typealias ManhattanDistance = Int
+infix fun Position.manhattanDistanceTo(other: Position): ManhattanDistance {
+    return (this.x range other.x).toList().size + (this.y range other.y).toList().size
 }
 
 infix fun Int.range(other: Int): Iterable<Int> {

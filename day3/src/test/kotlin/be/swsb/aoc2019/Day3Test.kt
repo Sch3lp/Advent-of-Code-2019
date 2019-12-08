@@ -16,6 +16,28 @@ import org.junit.jupiter.api.TestInstance
 class Day3Test {
 
     @Nested
+    inner class ManhattanDistanceTests {
+
+        @Test
+        fun `manhattanDistance to itself returns 0`() {
+            assertThat(at(1,0) manhattanDistanceTo at(1,0)).isEqualTo(0)
+            assertThat(at(-1,-5) manhattanDistanceTo at(-1,-5)).isEqualTo(0)
+        }
+
+        @Test
+        fun `manhattanDistance crossing 0,0`() {
+            assertThat(at(1,1) manhattanDistanceTo at(-1,-1)).isEqualTo(4)
+        }
+
+        @Test
+        fun `manhattanDistance x and y`() {
+            assertThat(at(1,0) manhattanDistanceTo at(-1,0)).isEqualTo(2)
+            assertThat(at(1,0) manhattanDistanceTo at(1,-2)).isEqualTo(2)
+            assertThat(at(1,0) manhattanDistanceTo at(2,2)).isEqualTo(3)
+        }
+    }
+
+    @Nested
     inner class GeneralTests {
         @Test
         fun `Parsing into WireDirections`() {
