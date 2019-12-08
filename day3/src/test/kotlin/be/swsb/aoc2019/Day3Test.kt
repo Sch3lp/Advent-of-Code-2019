@@ -1,9 +1,8 @@
 package be.swsb.aoc2019
 
-import be.swsb.aoc2019.Position.Companion.at
 import be.swsb.aoc2019.WireDirection.*
 import be.swsb.aoc2019.WireDirection.Companion.parseToWireDirection
-import be.swsb.aoc2019.common.Common.csvLines
+import be.swsb.aoc2019.common.Common.asCsvLines
 import be.swsb.aoc2019.common.Common.readLinesAs
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatExceptionOfType
@@ -50,9 +49,9 @@ class Day3Test {
 
         @Test
         fun `solve exercise 1`() {
-            val wires = readLinesAs("actualInput.txt", ::csvLines)
+            val wires = readLinesAs("actualInput.txt", ::asCsvLines)
             val result = solve(wires[0],wires[1])
-            assertThat(result).isEqualTo(4090689)
+            assertThat(result).isEqualTo(0)
         }
     }
 

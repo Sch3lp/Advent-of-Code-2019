@@ -16,6 +16,10 @@ object Common {
             .flatMap { it.split(",") }
             .map { it.trim() }
 
+    fun asCsvLines(strings: String): List<String> = strings
+            .split(",")
+            .map { it.trim() }
+
     inline fun <reified R> csvLinesAs(fileName: String, stringConverter: (String) -> R) : List<R> =
         csvLines(fileName).map(stringConverter)
 }
