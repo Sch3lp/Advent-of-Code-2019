@@ -1,4 +1,4 @@
-package be.swsb.aoc2019.day1
+package be.swsb.aoc2019
 
 object Day1_1 {
     fun multipleModulesFuelCounterUpper(modules: List<ModuleMass>): FuelRequirement = modules.sumBy { singleModuleFuelCounterUpper(it) }

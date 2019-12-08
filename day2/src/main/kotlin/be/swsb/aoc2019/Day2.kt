@@ -1,6 +1,6 @@
-package be.swsb.aoc2019.day2
+package be.swsb.aoc2019
 
-import be.swsb.aoc2019.day2.Instruction.Companion.fromAListOfMax4Ints
+import be.swsb.aoc2019.Instruction.Companion.fromAListOfMax4Ints
 import java.lang.IllegalArgumentException
 
 

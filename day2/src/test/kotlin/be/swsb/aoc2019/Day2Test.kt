@@ -1,7 +1,7 @@
-package be.swsb.aoc2019.day2
+package be.swsb.aoc2019
 
 import be.swsb.aoc2019.common.Common.csvLinesAs
-import be.swsb.aoc2019.day2.Instruction.*
+import be.swsb.aoc2019.Instruction.*
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatExceptionOfType
 import org.junit.jupiter.api.Nested
@@ -92,11 +92,11 @@ class Day2Test {
 
         @Test
         internal fun `execute | applying Noop, returns the same Intcodes`() {
-            val intCodes = IntCodes(listOf(0,2,3,4))
+            val intCodes = IntCodes(listOf(0, 2, 3, 4))
 
             val actual = intCodes.execute(Noop)
 
-            assertThat(actual).isEqualTo(IntCodes(listOf(0,2,3,4)))
+            assertThat(actual).isEqualTo(IntCodes(listOf(0, 2, 3, 4)))
         }
     }
 
