@@ -1,7 +1,7 @@
 package be.swsb.aoc2019
 
-// parse lines into wires
-// parse U,D,L,R into wire direction commands
+// parse lines into wires ✅
+// parse U,D,L,R into wire direction commands ✅
 // keep positions for both wires
 // keep positions where wires crossed (same positions in both lists)
 // calculate manhattan distances from (0,0) to all crossed positions
@@ -10,10 +10,10 @@ package be.swsb.aoc2019
 fun solve(wire1: List<String>, wire2: List<String>): Int = 0
 
 sealed class WireDirection(val steps: Int) {
-    data class Right(private val _steps:Int): WireDirection(_steps)
-    data class Left(private val _steps:Int): WireDirection(_steps)
-    data class Up(private val _steps:Int): WireDirection(_steps)
-    data class Down(private val _steps:Int): WireDirection(_steps)
+    data class Right(private val _steps: Int): WireDirection(_steps)
+    data class Left(private val _steps: Int): WireDirection(_steps)
+    data class Up(private val _steps: Int): WireDirection(_steps)
+    data class Down(private val _steps: Int): WireDirection(_steps)
 
     companion object{
         fun parseToWireDirection(direction: String): WireDirection {
@@ -28,5 +28,10 @@ sealed class WireDirection(val steps: Int) {
             }
         }
     }
+}
 
+data class Position(val x: Int, val y: Int) {
+    companion object {
+        fun at(x: Int, y: Int): Position = Position(x,y)
+    }
 }

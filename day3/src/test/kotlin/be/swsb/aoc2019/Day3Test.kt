@@ -1,5 +1,6 @@
 package be.swsb.aoc2019
 
+import be.swsb.aoc2019.Position.Companion.at
 import be.swsb.aoc2019.WireDirection.*
 import be.swsb.aoc2019.WireDirection.Companion.parseToWireDirection
 import be.swsb.aoc2019.common.Common.csvLines
