@@ -21,6 +21,8 @@ data class Quadrants<out T>(
 //Thanks ICHBINI! I cleaned it up nicely ;)
 /**
  * Partitions the given Positions into a Quadrants of Positions.
+ * x = 0 is regarded as left, y = 0 is regarded as bottom,
+ * So at 0,0 is in the bottom left quadrant
  */
 fun Quadrants.Companion.quadrants(positions: Positions): Quadrants<Positions> {
     val (right, left) = positions.partition { it.x > 0 }
