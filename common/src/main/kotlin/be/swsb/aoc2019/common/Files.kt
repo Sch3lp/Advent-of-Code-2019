@@ -1,6 +1,6 @@
 package be.swsb.aoc2019.common
 
-object Common {
+object Files {
     fun readLines(fileName: String): List<String> = object{}.javaClass.classLoader.getResourceAsStream(fileName)
             .bufferedReader()
             .readLines()

@@ -1,12 +1,12 @@
 package be.swsb.aoc2019.common
 
-import be.swsb.aoc2019.common.Common.csvLinesAs
-import be.swsb.aoc2019.common.Common.readLinesAs
+import be.swsb.aoc2019.common.Files.csvLinesAs
+import be.swsb.aoc2019.common.Files.readLinesAs
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 
-class CommonTest {
+class FilesTest {
 
     @Nested
     inner class FileReader {

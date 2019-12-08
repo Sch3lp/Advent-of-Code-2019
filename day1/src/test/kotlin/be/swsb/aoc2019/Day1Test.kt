@@ -1,6 +1,6 @@
 package be.swsb.aoc2019
 
-import be.swsb.aoc2019.common.Common.readLinesAs
+import be.swsb.aoc2019.common.Files.readLinesAs
 import be.swsb.aoc2019.Day1_1.multipleModulesFuelCounterUpper
 import be.swsb.aoc2019.Day1_1.singleModuleFuelCounterUpper
 import org.assertj.core.api.Assertions.assertThat

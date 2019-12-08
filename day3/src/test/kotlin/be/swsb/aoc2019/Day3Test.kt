@@ -1,10 +1,9 @@
 package be.swsb.aoc2019
 
-import be.swsb.aoc2019.Position.Companion.at
 import be.swsb.aoc2019.WireDirection.*
 import be.swsb.aoc2019.WireDirection.Companion.parseToWireDirection
-import be.swsb.aoc2019.common.Common.asCsvLines
-import be.swsb.aoc2019.common.Common.readLinesAs
+import be.swsb.aoc2019.common.Position
+import be.swsb.aoc2019.common.Position.Companion.at
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatExceptionOfType
 import org.junit.jupiter.api.Nested
@@ -14,28 +13,6 @@ import org.junit.jupiter.api.TestInstance
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class Day3Test {
-
-    @Nested
-    inner class ManhattanDistanceTests {
-
-        @Test
-        fun `manhattanDistance to itself returns 0`() {
-            assertThat(at(1,0) manhattanDistanceTo at(1,0)).isEqualTo(0)
-            assertThat(at(-1,-5) manhattanDistanceTo at(-1,-5)).isEqualTo(0)
-        }
-
-        @Test
-        fun `manhattanDistance crossing 0,0`() {
-            assertThat(at(1,1) manhattanDistanceTo at(-1,-1)).isEqualTo(4)
-        }
-
-        @Test
-        fun `manhattanDistance x and y`() {
-            assertThat(at(1,0) manhattanDistanceTo at(-1,0)).isEqualTo(2)
-            assertThat(at(1,0) manhattanDistanceTo at(1,-2)).isEqualTo(2)
-            assertThat(at(1,0) manhattanDistanceTo at(2,2)).isEqualTo(3)
-        }
-    }
 
     @Nested
     inner class GeneralTests {
@@ -50,8 +27,8 @@ class Day3Test {
         }
 
         @Test
-        fun `look up crossed positions`() {
-            val actual: List<Position> = lookUpCrossedPositions(listOf(at(1,1)),listOf(at(1,1)))
+        fun `find intersections`() {
+            val actual: List<Position> = findIntersections(listOf(at(1,1)),listOf(at(1,1)))
 
             assertThat(actual).containsExactly(at(1,1))
         }
@@ -115,27 +92,6 @@ class Day3Test {
                             at(3, 0), //go right
                             at(4, 0) //go right
                     )
-        }
-    }
-
-    @Nested
-    inner class UntilTests {
-        @Test
-        fun `until with same Position returns a list of that one Position`() {
-            assertThat(at(0, 0) until at(0, 0)).containsExactly(at(0, 0))
-        }
-
-        @Test
-        fun `until returns list of all Positions between two Positions, excluding the start`() {
-            assertThat(at(0, 0) until at(1, 0)).containsExactly(at(1, 0))
-            assertThat(at(1, 0) until at(0, 0)).containsExactly(at(0, 0))
-            assertThat(at(0, 0) until at(3, 0)).containsExactly(at(1, 0), at(2, 0), at(3, 0))
-        }
-
-        @Test
-        fun `until should explode when positions are on different axis`() {
-            assertThatExceptionOfType(java.lang.IllegalArgumentException::class.java)
-                    .isThrownBy { at(0, 0) until at(1, 1) }
         }
     }
 

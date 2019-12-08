@@ -1,6 +1,6 @@
 package be.swsb.aoc2019
 
-import be.swsb.aoc2019.common.Common.csvLinesAs
+import be.swsb.aoc2019.common.Files.csvLinesAs
 import be.swsb.aoc2019.Instruction.*
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatExceptionOfType
