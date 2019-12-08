@@ -1,10 +1,9 @@
 package be.swsb.aoc2019.common
 
-import org.assertj.core.api.Assertions
 import org.assertj.core.api.Assertions.assertThat
+import org.assertj.core.api.Assertions.assertThatExceptionOfType
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
-import java.lang.IllegalArgumentException
 
 class PositioningTest {
     @Nested
@@ -23,7 +22,7 @@ class PositioningTest {
 
         @Test
         fun `until should explode when positions are on different axis`() {
-            Assertions.assertThatExceptionOfType(IllegalArgumentException::class.java)
+            assertThatExceptionOfType(IllegalArgumentException::class.java)
                     .isThrownBy { Position.at(0, 0) until Position.at(1, 1) }
         }
     }
@@ -34,20 +33,20 @@ class PositioningTest {
 
         @Test
         fun `manhattanDistance to itself returns 0`() {
-            Assertions.assertThat(Position.at(1, 0) manhattanDistanceTo Position.at(1, 0)).isEqualTo(0)
-            Assertions.assertThat(Position.at(-1, -5) manhattanDistanceTo Position.at(-1, -5)).isEqualTo(0)
+            assertThat(Position.at(1, 0) manhattanDistanceTo Position.at(1, 0)).isEqualTo(0)
+            assertThat(Position.at(-1, -5) manhattanDistanceTo Position.at(-1, -5)).isEqualTo(0)
         }
 
         @Test
         fun `manhattanDistance crossing 0,0`() {
-            Assertions.assertThat(Position.at(1, 1) manhattanDistanceTo Position.at(-1, -1)).isEqualTo(4)
+            assertThat(Position.at(1, 1) manhattanDistanceTo Position.at(-1, -1)).isEqualTo(4)
         }
 
         @Test
         fun `manhattanDistance x and y`() {
-            Assertions.assertThat(Position.at(1, 0) manhattanDistanceTo Position.at(-1, 0)).isEqualTo(2)
-            Assertions.assertThat(Position.at(1, 0) manhattanDistanceTo Position.at(1, -2)).isEqualTo(2)
-            Assertions.assertThat(Position.at(1, 0) manhattanDistanceTo Position.at(2, 2)).isEqualTo(3)
+            assertThat(Position.at(1, 0) manhattanDistanceTo Position.at(-1, 0)).isEqualTo(2)
+            assertThat(Position.at(1, 0) manhattanDistanceTo Position.at(1, -2)).isEqualTo(2)
+            assertThat(Position.at(1, 0) manhattanDistanceTo Position.at(2, 2)).isEqualTo(3)
         }
     }
 }
