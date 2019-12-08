@@ -1,8 +1,11 @@
 package be.swsb.aoc2019
 
+import be.swsb.aoc2019.WireDirection.*
+import be.swsb.aoc2019.WireDirection.Companion.parseToWireDirection
 import be.swsb.aoc2019.common.Common.csvLines
 import be.swsb.aoc2019.common.Common.readLinesAs
 import org.assertj.core.api.Assertions.assertThat
+import org.assertj.core.api.Assertions.assertThatExceptionOfType
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
@@ -10,6 +13,16 @@ import org.junit.jupiter.api.TestInstance
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class Day3Test {
+
+    @Test
+    internal fun `Parsing into WireDirections`() {
+        assertThat(parseToWireDirection("R1")).isEqualTo(Right(1))
+        assertThat(parseToWireDirection("L20")).isEqualTo(Left(20))
+        assertThat(parseToWireDirection("U999")).isEqualTo(Up(999))
+        assertThat(parseToWireDirection("D42")).isEqualTo(Down(42))
+        assertThatExceptionOfType(IllegalArgumentException::class.java)
+                .isThrownBy { parseToWireDirection("F00") }
+    }
 
     @Nested
     inner class Exercise1 {
