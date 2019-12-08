@@ -29,7 +29,6 @@ class Day3Test {
         @Test
         fun `find intersections`() {
             val actual: List<Position> = findIntersections(listOf(at(1,1)),listOf(at(1,1)))
-
             assertThat(actual).containsExactly(at(1,1))
         }
     }

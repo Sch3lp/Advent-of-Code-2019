@@ -5,16 +5,32 @@ import be.swsb.aoc2019.common.*
 import be.swsb.aoc2019.common.Position.Companion.at
 
 
-// optimize find intersections to work with quadrants
-// find intersections
-// applyWireDirections until (and including) every intersection and keep the amount of steps
-// do that for every wire
+// optimize find intersections to work with quadrants ✅
+// find intersections ✅
+// applyWireDirections until (and including) every intersection and keep the amount of steps ❌
+// do that for every wire ❌
+// for every intersection, retrieve its index in both wires, ✅
+// because it's the amount of steps until (and including) that Position
 // then we have the amount of steps it takes to reach every intersection, per wire
-// then make sums of all combinations (wire1[123,19,44] * wire2[1256,552,23])
-// and find the sum with the least amount of steps
+// then merge both maps of Position and their steps ✅
+// and finally sum all values (steps) ✅
+// and take the .min() of that ✅
 
 fun solve2(wire1: List<String>, wire2: List<String>): Int {
-    return 0
+    val mess1 = applyWireDirections(wire1.map { WireDirection.parseToWireDirection(it) })
+    val mess2 = applyWireDirections(wire2.map { WireDirection.parseToWireDirection(it) })
+    val intersections = measure("findIntersections") {
+        findIntersections(mess1, mess2)
+    }
+    val stepsUntilIntersections1 = intersections.map { it to mess1.indexOf(it) }.toMap()
+    val stepsUntilIntersections2 = intersections.map { it to mess2.indexOf(it) }.toMap()
+    return mergeIntersections(stepsUntilIntersections1, stepsUntilIntersections2).values.min()!!
+}
+
+fun mergeIntersections(intersections1: Map<Position, Int>, intersections2: Map<Position, Int>): Map<Position, Int> {
+    return (intersections1.keys + intersections2.keys).associateWith {
+        setOf(intersections1[it], intersections2[it]).filterNotNull().sum()
+    }
 }
 
 // parse lines into wires ✅
@@ -25,17 +41,15 @@ fun solve2(wire1: List<String>, wire2: List<String>): Int {
 // return closest distance ✅
 
 fun solve(wire1: List<String>, wire2: List<String>): Int {
-    val mess1 = measure("mess1") {
-        applyWireDirections(wire1.map { WireDirection.parseToWireDirection(it) })
-    }
-    val mess2 = measure("mess2") {
-        applyWireDirections(wire2.map { WireDirection.parseToWireDirection(it) })
-    }
+    val wire1Directions = wire1.map { WireDirection.parseToWireDirection(it) }
+    val wire2Directions = wire2.map { WireDirection.parseToWireDirection(it) }
+    val mess1 = applyWireDirections(wire1Directions)
+    val mess2 = applyWireDirections(wire2Directions)
     val intersections = measure("findIntersections") {
         findIntersections(mess1, mess2)
     }
+
     return intersections
-            .filterNot { it == at(0, 0) }
             .map { it manhattanDistanceTo at(0, 0) }.min()!!
 }
 
@@ -56,7 +70,8 @@ fun findIntersections(wire1: Positions, wire2: Positions): Positions {
         wire2Quadrants.bottomLeft.find { wire2Pos -> wire2Pos == it }
     }
 
-    return topRightIntersections + bottomRightIntersections + topLeftIntersections + bottomLeftIntersections
+    return (topRightIntersections + bottomRightIntersections + topLeftIntersections + bottomLeftIntersections)
+            .filterNot { it == at(0, 0) }
 }
 
 
