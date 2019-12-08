@@ -8,7 +8,7 @@ object Metrics {
         println("Measuring $measuredThing")
         var result: R? = null
         val elapsedTime = measureTimeMillis { result = block() }
-        println("$measuredThing took $elapsedTime to complete")
+        println("$measuredThing took $elapsedTime millis to complete")
         return result!!
     }
 }
