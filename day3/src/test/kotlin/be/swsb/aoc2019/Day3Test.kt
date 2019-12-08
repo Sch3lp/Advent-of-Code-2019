@@ -161,13 +161,6 @@ class Day3Test {
 
             assertThat(result).isEqualTo(135)
         }
-
-        @Test
-        fun `solve exercise 1`() {
-            val wires = readLinesAs("actualInput.txt", ::asCsvLines)
-            val result = solve(wires[0], wires[1])
-            assertThat(result).isEqualTo(0)
-        }
     }
 
 

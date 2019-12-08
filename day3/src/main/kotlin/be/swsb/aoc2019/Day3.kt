@@ -7,15 +7,21 @@ import be.swsb.aoc2019.WireDirection.*
 // parse U,D,L,R into wire direction commands ✅
 // keep positions for both wires ✅
 // keep positions where wires crossed (same positions in both lists) ✅
-// calculate manhattan distances from (0,0) to all crossed positions
+// calculate manhattan distances from (0,0) to all crossed positions ✅
 // return closest distance
 
-fun solve(wire1: List<String>, wire2: List<String>): Int = 0
+fun solve(wire1: List<String>, wire2: List<String>): Int {
+    val mess1 = applyWireDirections(wire1.map { WireDirection.parseToWireDirection(it) })
+    val mess2 = applyWireDirections(wire2.map { WireDirection.parseToWireDirection(it) })
+    return lookUpCrossedPositions(mess1, mess2)
+            .filterNot { it == at(0,0) }
+            .map { it manhattanDistanceTo at(0, 0) }.min()!!
+}
 
 fun lookUpCrossedPositions(wire1: List<Position>, wire2: List<Position>): List<Position> =
-     wire1.mapNotNull {
-         wire2.find { wire2Pos -> wire2Pos == it }
-     }
+        wire1.mapNotNull {
+            wire2.find { wire2Pos -> wire2Pos == it }
+        }
 
 sealed class WireDirection(val steps: Int) {
     data class Right(private val _steps: Int) : WireDirection(_steps)
@@ -78,6 +84,7 @@ infix fun Position.until(other: Position): List<Position> {
 }
 
 typealias ManhattanDistance = Int
+
 infix fun Position.manhattanDistanceTo(other: Position): ManhattanDistance {
     return (this.x range other.x).toList().size + (this.y range other.y).toList().size
 }
