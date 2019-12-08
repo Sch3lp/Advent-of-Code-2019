@@ -56,3 +56,17 @@ Is ths first flavor worth it if _intCodes is already wrapped in a SmartCollectio
 Another option would be to create an extension function on List: List.replace(index, newValue) to wrap `.toMutableList().apply{}.toList()` stuff.
 As suggested by _ICHBINI_.
 
+##### _08/12_
+
+Refactored a bunch of stuff into the Common module:
+* `Position`: to help with Position stuff like _Manhattan Distance_, ranging a `Position` from and until another `Position` on the same axis
+* `Quadrants`: to organize Positions into quadrants
+* `Metrics`: to measure how long stuff takes
+
+I created an extension function for `Position` because I didn't want the common `Position` class to have to know about a `WireDirection` in which it was being pulled.
+
+I also added an extension function to `Int` in Common and first put them in `Positioning`, but afterwards extracted them it into `IntExtensions` to make it a little bit more clear that I'm extending `Int` there.
+
+`Int` was lacking a rangeTo that maintained order in both ways: from -1 to 1 and from 1 to -1. The former is indeed `rangeTo`, but the latter is `downTo` and returns a different type.
+
+This is the umpteenth time that viewer _ICHBINI_ has helped me out quite a lot. I'm learning a lot from them and I'm really grateful they're watching my stream.

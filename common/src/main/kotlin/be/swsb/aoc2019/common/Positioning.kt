@@ -71,10 +71,3 @@ infix fun Position.manhattanDistanceTo(other: Position): ManhattanDistance {
     return (this.x range other.x).toList().size + (this.y range other.y).toList().size
 }
 
-infix fun Int.range(other: Int): Iterable<Int> {
-    return if (this < other) {
-        (this + 1)..other
-    } else {
-        (this - 1).downTo(other)
-    }
-}
