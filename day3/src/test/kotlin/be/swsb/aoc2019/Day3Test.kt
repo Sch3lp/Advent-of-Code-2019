@@ -28,6 +28,31 @@ class Day3Test {
         }
 
         @Test
+        fun `look up crossed positions`() {
+
+        }
+    }
+
+    @Nested
+    inner class WireDirectionTests {
+        @Test
+        fun `pull in a WireDirection returns new Position`() {
+            assertThat(at(1, -1).pull(Right(1))).containsExactly(at(2, -1))
+            assertThat(at(1, -1).pull(Left(4))).containsExactly(
+                    at(0, -1),
+                    at(-1, -1),
+                    at(-2, -1),
+                    at(-3, -1)
+            )
+            assertThat(at(1, -1).pull(Up(1))).containsExactly(at(1, 0))
+            assertThat(at(1, -1).pull(Down(3))).containsExactly(
+                    at(1, -2),
+                    at(1, -3),
+                    at(1, -4)
+            )
+        }
+
+        @Test
         fun `applying WireDirections returns a list of Positions`() {
             val positionsVisited = applyWireDirections(listOf(Right(2), Up(3)))
 
@@ -43,22 +68,29 @@ class Day3Test {
         }
 
         @Test
-        fun `pull in a WireDirection returns new Position`() {
-            assertThat(at(1, -1).pull(Right(1))).containsExactly(at(1,-1), at(2, -1))
-            assertThat(at(1, -1).pull(Left(4))).containsExactly(
-                    at(1, -1),
-                    at(0, -1),
-                    at(-1, -1),
-                    at(-2, -1),
-                    at(-3, -1)
-            )
-            assertThat(at(1, -1).pull(Up(1))).containsExactly(at(1, -1), at(1, 0))
-            assertThat(at(1, -1).pull(Down(3))).containsExactly(
-                    at(1, -1),
-                    at(1, -2),
-                    at(1, -3),
-                    at(1, -4)
-            )
+        fun `applying WireDirections resulting in a self-crossing wire`() {
+            val positionsVisited = applyWireDirections(listOf(
+                    Right(2),
+                    Up(2),
+                    Left(1),
+                    Down(2),
+                    Right(3)
+            ))
+
+            assertThat(positionsVisited)
+                    .containsExactly(
+                            at(0,0), //initial position
+                            at(1, 0), //go right
+                            at(2, 0), //go right
+                            at(2, 1), //go up
+                            at(2, 2), //go up
+                            at(1, 2), //go left
+                            at(1, 1), //go down
+                            at(1, 0), //go down
+                            at(2, 0), //go right
+                            at(3, 0), //go right
+                            at(4, 0) //go right
+                    )
         }
     }
 
@@ -70,10 +102,10 @@ class Day3Test {
         }
 
         @Test
-        fun `until returns list of all Positions between two Positions`() {
-            assertThat(at(0, 0) until at(1, 0)).containsExactly(at(0, 0), at(1, 0))
-            assertThat(at(1, 0) until at(0, 0)).containsExactly(at(1, 0), at(0, 0))
-            assertThat(at(0, 0) until at(3, 0)).containsExactly(at(0, 0), at(1, 0), at(2, 0), at(3, 0))
+        fun `until returns list of all Positions between two Positions, excluding the start`() {
+            assertThat(at(0, 0) until at(1, 0)).containsExactly(at(1, 0))
+            assertThat(at(1, 0) until at(0, 0)).containsExactly(at(0, 0))
+            assertThat(at(0, 0) until at(3, 0)).containsExactly(at(1, 0), at(2, 0), at(3, 0))
         }
 
         @Test

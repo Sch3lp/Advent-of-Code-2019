@@ -5,7 +5,7 @@ import be.swsb.aoc2019.WireDirection.*
 
 // parse lines into wires ✅
 // parse U,D,L,R into wire direction commands ✅
-// keep positions for both wires
+// keep positions for both wires ✅
 // keep positions where wires crossed (same positions in both lists)
 // calculate manhattan distances from (0,0) to all crossed positions
 // return closest distance
@@ -33,8 +33,8 @@ sealed class WireDirection(val steps: Int) {
     }
 }
 
-fun applyWireDirections(directions: List<WireDirection>): Set<Position> {
-    val visitedPositions = mutableSetOf(at(0, 0))
+fun applyWireDirections(directions: List<WireDirection>): List<Position> {
+    val visitedPositions = mutableListOf(at(0, 0))
     return directions.flatMapTo(visitedPositions) { visitedPositions.last().pull(it) }
 }
 
@@ -74,8 +74,8 @@ infix fun Position.until(position: Position): List<Position> {
 
 infix fun Int.range(other: Int): Iterable<Int> {
     return if (this < other) {
-        this..other
+        (this + 1)..other
     } else {
-        this.downTo(other)
+        (this - 1).downTo(other)
     }
 }
