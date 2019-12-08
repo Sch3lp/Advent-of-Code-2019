@@ -6,11 +6,15 @@ import be.swsb.aoc2019.WireDirection.*
 // parse lines into wires ✅
 // parse U,D,L,R into wire direction commands ✅
 // keep positions for both wires ✅
-// keep positions where wires crossed (same positions in both lists)
+// keep positions where wires crossed (same positions in both lists) ✅
 // calculate manhattan distances from (0,0) to all crossed positions
 // return closest distance
 
 fun solve(wire1: List<String>, wire2: List<String>): Int = 0
+
+fun lookUpCrossedPositions(wire1: List<Position>, wire2: List<Position>): List<Position> {
+    return wire1.mapNotNull { wire2.find { wire2Pos -> wire2Pos == it } }
+}
 
 sealed class WireDirection(val steps: Int) {
     data class Right(private val _steps: Int) : WireDirection(_steps)

@@ -29,7 +29,9 @@ class Day3Test {
 
         @Test
         fun `look up crossed positions`() {
+            val actual: List<Position> = lookUpCrossedPositions(listOf(at(1,1)),listOf(at(1,1)))
 
+            assertThat(actual).containsExactly(at(1,1))
         }
     }
 
