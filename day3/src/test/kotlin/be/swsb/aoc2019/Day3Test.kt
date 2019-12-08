@@ -29,18 +29,36 @@ class Day3Test {
 
         @Test
         fun `applying WireDirections returns a list of Positions`() {
-            val positionsVisited: List<Position> = applyWireDirections(listOf(Right(2), Up(3)))
+            val positionsVisited = applyWireDirections(listOf(Right(2), Up(3)))
 
             assertThat(positionsVisited)
-                    .containsExactly(at(1, 0), at(2, 0), at(2, 1), at(2, 2), at(2, 3))
+                    .containsExactly(
+                            at(0,0), //initial position
+                            at(1, 0), //go right
+                            at(2, 0), //go right
+                            at(2, 1), //go up
+                            at(2, 2), //go up
+                            at(2, 3) //go up
+                    )
         }
 
         @Test
         fun `pull in a WireDirection returns new Position`() {
-            assertThat(at(1, -1).pull(Right(1))).isEqualTo(at(2, -1))
-            assertThat(at(1, -1).pull(Left(4))).isEqualTo(at(-3, -1))
-            assertThat(at(1, -1).pull(Up(1))).isEqualTo(at(1, 0))
-            assertThat(at(1, -1).pull(Down(3))).isEqualTo(at(1, -4))
+            assertThat(at(1, -1).pull(Right(1))).containsExactly(at(1,-1), at(2, -1))
+            assertThat(at(1, -1).pull(Left(4))).containsExactly(
+                    at(1, -1),
+                    at(0, -1),
+                    at(-1, -1),
+                    at(-2, -1),
+                    at(-3, -1)
+            )
+            assertThat(at(1, -1).pull(Up(1))).containsExactly(at(1, -1), at(1, 0))
+            assertThat(at(1, -1).pull(Down(3))).containsExactly(
+                    at(1, -1),
+                    at(1, -2),
+                    at(1, -3),
+                    at(1, -4)
+            )
         }
     }
 

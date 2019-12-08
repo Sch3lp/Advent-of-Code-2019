@@ -33,10 +33,9 @@ sealed class WireDirection(val steps: Int) {
     }
 }
 
-fun applyWireDirections(directions: List<WireDirection>): List<Position> {
-    val visitedPositions = listOf(at(0, 0)).toMutableList()
-//    return directions.mapIndexedTo(visitedPositions) { i, it -> visitedPositions[i].pull(it)}
-    return visitedPositions
+fun applyWireDirections(directions: List<WireDirection>): Set<Position> {
+    val visitedPositions = mutableSetOf(at(0, 0))
+    return directions.flatMapTo(visitedPositions) { visitedPositions.last().pull(it) }
 }
 
 
