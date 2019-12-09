@@ -14,7 +14,7 @@ import java.lang.IllegalArgumentException
 class Day5Test {
 
     @Nested
-    inner class ParsingIntoOpcodeStatements {
+    inner class ParsingIntoInstructions {
         @Test
         internal fun `fromAListOfMax4Ints | cannot parse from a list of more than 4 Intcodes`() {
             assertThatExceptionOfType(IllegalArgumentException::class.java)
@@ -50,7 +50,7 @@ class Day5Test {
         }
 
         @Test
-        internal fun `parseInput | can parse input into OpcodeStatements`() {
+        internal fun `parseInput | can parse input into Instructions`() {
             val result: List<Instruction> = parseInput(listOf(1, 9, 10, 3, 2, 22, 33, 44, 99, 2))
 
             assertThat(result).containsExactly(

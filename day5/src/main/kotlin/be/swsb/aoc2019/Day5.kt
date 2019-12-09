@@ -42,9 +42,11 @@ data class IntCodes(private val _intCodes: List<Int>) : List<Int> by _intCodes {
     }
 }
 
+typealias Address = Int
+
 sealed class Instruction {
-    data class Addition(val parameterAddress1: Int, val parameterAddress2: Int, val destinationAddress: Int) : Instruction()
-    data class Multiplication(val parameterAddress1: Int, val parameterAddress2: Int, val destinationAddress: Int) : Instruction()
+    data class Addition(val parameterAddress1: Address, val parameterAddress2: Address, val destinationAddress: Address) : Instruction()
+    data class Multiplication(val parameterAddress1: Address, val parameterAddress2: Address, val destinationAddress: Address) : Instruction()
     object Halt : Instruction()
     object Noop : Instruction()
 
@@ -64,6 +66,5 @@ sealed class Instruction {
     }
 }
 
-// Thank you so much ICHBINI for the `.chunked` suggestion
 fun parseInput(intCodes: List<Int>): List<Instruction> = intCodes.chunked(4) { fromAListOfMax4Ints(it) }
 
