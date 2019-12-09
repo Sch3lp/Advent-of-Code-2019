@@ -1,70 +1,69 @@
 package be.swsb.aoc2019
 
-import be.swsb.aoc2019.Instruction.Companion.fromAListOfMax4Ints
+import be.swsb.aoc2019.Parameter.PositionMode
+import be.swsb.aoc2019.ParameterValue.Address
+import be.swsb.aoc2019.ParameterValue.Value
 
 
-fun solve(intCodes: List<Int>): Int {
-    val opcodeStatements = parseInput(intCodes)
+fun solve(intCodes: List<String>): Int {
+    val memory: IntCodes = parseIntoIntCodes(intCodes)
+    partiallyExecute(memory, null)
+//    val instructions = parseInput(intCodes)
 
-    var intCode = IntCodes(intCodes)
-    opcodeStatements.forEach { opCodeStatement ->
-        intCode = intCode.execute(opCodeStatement)
-    }
-    return intCode.single()
+//    var intCode = IntCodes(intCodes)
+//    instructions.forEach { instruction ->
+//        intCode = intCode.execute(instruction)
+//    }
+//    return intCode.single()
+    return 0
 }
 
+fun parseIntoIntCodes(intCodes: List<String>): IntCodes {
+    return IntCodes(intCodes.map { IntCode(it) })
+}
 
-data class IntCodes(private val _intCodes: List<Int>) : List<Int> by _intCodes {
+data class IntCode(private val _internalValue: String) {
+
+}
+
+data class IntCodes(private val _intCodes: List<IntCode>) : List<IntCode> by _intCodes {
 
     fun execute(instruction: Instruction): IntCodes {
-        return this.let {
-            when (instruction) {
-                is Instruction.Addition -> add(instruction)
-                is Instruction.Multiplication -> multiply(instruction)
-                is Instruction.Halt -> IntCodes(mutableListOf(_intCodes[0]))
-                is Instruction.Noop -> IntCodes(_intCodes)
-            }
-        }
-    }
-
-    private fun add(instruction: Instruction.Addition): IntCodes {
-        return IntCodes(_intCodes.toMutableList()
-                .apply {
-                    this[instruction.destinationAddress] = _intCodes[instruction.parameterAddress1] + _intCodes[instruction.parameterAddress2]
-                }.toList())
-    }
-
-    private fun multiply(instruction: Instruction.Multiplication): IntCodes {
-        return IntCodes(_intCodes.toMutableList()
-                .apply {
-                    this[instruction.destinationAddress] = _intCodes[instruction.parameterAddress1] * _intCodes[instruction.parameterAddress2]
-                }.toList())
+        return IntCodes(emptyList())
     }
 }
 
-typealias Address = Int
+sealed class ParameterValue(val value: Int) {
+    data class Address(private val _value: Int) : ParameterValue(_value)
+    data class Value(private val _value: Int) : ParameterValue(_value)
+}
+
+sealed class Parameter(val value: ParameterValue) {
+    data class PositionMode(private val _value: Address) : Parameter(_value) {
+        constructor(_value: Int) : this(Address(_value))
+    }
+
+    data class ImmediateMode(private val _value: Value) : Parameter(_value) {
+        constructor(_value: Int) : this(Value(_value))
+    }
+}
 
 sealed class Instruction {
-    data class Addition(val parameterAddress1: Address, val parameterAddress2: Address, val destinationAddress: Address) : Instruction()
-    data class Multiplication(val parameterAddress1: Address, val parameterAddress2: Address, val destinationAddress: Address) : Instruction()
+    data class Addition(val parameter1: Parameter? = null, val parameter2: Parameter? = null, val destinationAddress: PositionMode? = null) : Instruction()
+    data class Multiplication(val parameter1: Parameter? = null, val parameter2: Parameter? = null, val destinationAddress: PositionMode? = null) : Instruction()
     object Halt : Instruction()
-    object Noop : Instruction()
+    object Execute : Instruction()
 
     companion object {
-        fun fromAListOfMax4Ints(maxFourIntCodes: List<Int>): Instruction {
-            if (maxFourIntCodes.size > 4) throw IllegalArgumentException("An Instruction cannot be made from more than 4 Intcodes")
-            return parse(maxFourIntCodes)
-        }
 
-        private fun parse(maxFourIntCodes: List<Int>): Instruction =
-                when (maxFourIntCodes[0]) {
-                    1 -> Addition(maxFourIntCodes[1], maxFourIntCodes[2], maxFourIntCodes[3])
-                    2 -> Multiplication(maxFourIntCodes[1], maxFourIntCodes[2], maxFourIntCodes[3])
-                    99 -> Halt
-                    else -> Noop
-                }
     }
 }
 
-fun parseInput(intCodes: List<Int>): List<Instruction> = intCodes.chunked(4) { fromAListOfMax4Ints(it) }
+fun partiallyExecute(memory: IntCodes, currentInstruction: Instruction?): Pair<IntCodes, Instruction?> {
+    // memory -> state
+    // gradually build up an instruction
+    // when it's _complete_, execute it and apply it to memory
+    return memory to currentInstruction
+}
+
 
