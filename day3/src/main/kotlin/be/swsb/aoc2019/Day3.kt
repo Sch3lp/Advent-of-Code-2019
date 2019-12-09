@@ -103,9 +103,9 @@ fun applyWireDirections(directions: List<WireDirection>): Positions {
 
 fun Position.pull(direction: WireDirection): Positions {
     return when (direction) {
-        is Right -> this until at(this.x + direction.steps, this.y)
-        is Left -> this until at(this.x - direction.steps, this.y)
-        is Up -> this until at(this.x, this.y + direction.steps)
-        is Down -> this until at(this.x, this.y - direction.steps)
+        is Right -> this until this.copy(x = this.x + direction.steps)
+        is Left -> this until this.copy(x = this.x - direction.steps)
+        is Up -> this until this.copy(y = this.y + direction.steps)
+        is Down -> this until this.copy(y = this.y - direction.steps)
     }
 }
