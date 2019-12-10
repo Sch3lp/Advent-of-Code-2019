@@ -1,3 +1,3 @@
 package be.swsb.aoc2019
 
-fun intCodes(vararg strings: String): IntCodes = IntCodes(strings.map { IntCode(it) })
+fun memory(vararg ints: Int): Memory = Memory(ints.toList())
