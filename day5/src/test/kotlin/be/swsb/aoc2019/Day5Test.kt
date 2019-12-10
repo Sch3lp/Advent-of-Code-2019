@@ -2,42 +2,20 @@ package be.swsb.aoc2019
 
 import be.swsb.aoc2019.InputMode.Immediate
 import be.swsb.aoc2019.InputMode.PositionMode
-import be.swsb.aoc2019.Instruction.*
-import be.swsb.aoc2019.Instruction.Companion.instructionFromIntCode
+import be.swsb.aoc2019.Instruction.Addition
 import be.swsb.aoc2019.common.Files.csvLines
 import org.assertj.core.api.Assertions.assertThat
-import org.assertj.core.api.Assertions.assertThatExceptionOfType
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
-import java.lang.IllegalArgumentException
 
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class Day5Test {
 
-    //Questions:
-    // it says "and so on", so are there an infinite amount of parameters possible?
-    // or am I just silly and it depends merely on the sort of instruction in the 2 right most digits?
-
-    @Nested
-    inner class ParsingIntoMemory {
-        @Test
-        internal fun `parseIntoIntCodes | Strings get turned into IntCodes`() {
-            val intCodes = parseIntoIntCodes(listOf(1001, 1, -1, 4, 0))
-
-            assertThat(intCodes).containsExactly(
-                    IntCode(1001),
-                    IntCode(1),
-                    IntCode(-1),
-                    IntCode(4),
-                    IntCode(0))
-        }
-    }
 
     @Nested
     inner class ParsingIntoInstructions {
-
         /*
         given : "1001", "100", "-1", "3", "1002", ..., 3
 
@@ -61,27 +39,8 @@ class Day5Test {
         memory = "1001", "100", "-1", "2", "1002", ..., 3
         currentInstruction = Multiplication
          */
-
         @Test
-        internal fun `instructionFromString | Addition from an invalid string throws an exception`() {
-            assertThatExceptionOfType(IllegalArgumentException::class.java)
-                    .isThrownBy { instructionFromIntCode(IntCode(5501)) }
-            assertThatExceptionOfType(IllegalArgumentException::class.java)
-                    .isThrownBy { instructionFromIntCode(IntCode(111101)) }
-            assertThatExceptionOfType(IllegalArgumentException::class.java)
-                    .isThrownBy { instructionFromIntCode(IntCode(11101)) }
-        }
-
-        @Test
-        internal fun `instructionFromString | Addition can be created from a valid string`() {
-            assertThat(instructionFromIntCode(IntCode(1))).isEqualTo(Addition(PositionMode, PositionMode))
-            assertThat(instructionFromIntCode(IntCode(1001))).isEqualTo(Addition(PositionMode, Immediate))
-            assertThat(instructionFromIntCode(IntCode(1101))).isEqualTo(Addition(Immediate, Immediate))
-            assertThat(instructionFromIntCode(IntCode(101))).isEqualTo(Addition(Immediate, PositionMode))
-        }
-
-        @Test
-        internal fun `parseInput | gradually parses into an Instruction and executes it`() {
+        internal fun `partiallyExecute | gradually parses into an Instruction and executes it`() {
             val memory = memory(1001, 5, -1, 3, 1002, 2)
             val memoryAfterAddition = memory(1001, 5, -1, 1, 1002, 2)
 
@@ -91,91 +50,10 @@ class Day5Test {
             assertThat(partiallyExecute(memory.increasePointer(), Addition(PositionMode, Immediate)))
                     .isEqualTo(memory.pointerAt(3) to Addition(PositionMode, Immediate, 2, -1))
 //
-//            assertThat(partiallyExecute(memory, Addition(PositionMode(5), ImmediateMode(-1))))
-//                    .isEqualTo(memory to Addition(PositionMode(5), ImmediateMode(-1), PositionMode(3)))
-//
 //            assertThat(partiallyExecute(memory, Addition(PositionMode(5), ImmediateMode(-1), PositionMode(3))))
 //                    .isEqualTo(memoryAfterAddition to Multiplication())
         }
-    }
 
-    @Nested
-    inner class AdditionTests {
-        @Test
-        internal fun `loadParam1 | param1 is position mode and value of param1 is negative, throws exception`() {
-            assertThatExceptionOfType(IllegalArgumentException::class.java)
-                    .isThrownBy {
-                        Addition(PositionMode, PositionMode)
-                                .loadParam1(memory(1, -5, -1, 3, 1002, 2).increasePointer())
-                    }
-        }
-
-        @Test
-        internal fun `loadParam1 | param1 is position mode, returns new Addition with param1 from memory position at pointer`() {
-            val actual = Addition(PositionMode, PositionMode)
-                    .loadParam1(memory(1, 5, -1, 3, 1002, 2).increasePointer())
-
-            assertThat(actual).isEqualTo(Addition(PositionMode, PositionMode, 2))
-        }
-
-        @Test
-        internal fun `loadParam1 | param1 is immediate mode, returns new Addition with param1 from memory at pointer`() {
-            val actual = Addition(Immediate, Immediate)
-                    .loadParam1(memory(1101, 5, -1, 3, 1002, 2).increasePointer())
-
-            assertThat(actual).isEqualTo(Addition(Immediate, Immediate, 5))
-        }
-
-        @Test
-        internal fun `loadParam2 | param2 is position mode and value of param2 is negative, throws exception`() {
-            assertThatExceptionOfType(IllegalArgumentException::class.java)
-                    .isThrownBy {
-                        Addition(PositionMode, PositionMode)
-                                .loadParam2(memory(1, -5, -1, 3, 1002, 2).increasePointer())
-                    }
-        }
-
-        @Test
-        internal fun `loadParam2 | param2 is position mode, returns new Addition with param2 from memory position at pointer`() {
-            val actual = Addition(PositionMode, PositionMode)
-                    .loadParam2(memory(1, 5, 1, 3, 1002, 2).increasePointer().increasePointer())
-
-            assertThat(actual).isEqualTo(Addition(PositionMode, PositionMode, parameter2 = 5))
-        }
-
-        @Test
-        internal fun `loadParam2 | param2 is immediate mode, returns new Addition with param2 from memory at pointer`() {
-            val actual = Addition(Immediate, Immediate)
-                    .loadParam2(memory(1101, 5, -1, 3, 1002, 2).increasePointer().increasePointer())
-
-            assertThat(actual).isEqualTo(Addition(Immediate, Immediate, parameter2 = -1))
-        }
-    }
-
-    @Nested
-    inner class MemoryTests {
-        @Test
-        internal fun `get | returns value at memory index`() {
-            val memory = memory(1, 2, 3, 4, 5)
-            assertThat(memory[0].value).isEqualTo(1)
-            assertThat(memory[1].value).isEqualTo(2)
-            assertThat(memory[2].value).isEqualTo(3)
-            assertThat(memory[3].value).isEqualTo(4)
-            assertThat(memory[4].value).isEqualTo(5)
-        }
-
-        @Test
-        internal fun `get | with Mode returns value from memory depending on mode`() {
-            val memory = memory(1, 20, 30, 40, 50)
-            assertThat(memory[0, PositionMode].value).isEqualTo(20)
-        }
-
-        @Test
-        internal fun `get | with Position Mode and negative value, throws exception`() {
-            val memory = memory(1, 20, 30, 40, 50)
-            assertThatExceptionOfType(IllegalArgumentException::class.java)
-                    .isThrownBy { memory[-1, PositionMode] }
-        }
     }
 
     @Nested
