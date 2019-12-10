@@ -1,9 +1,14 @@
 package be.swsb.aoc2019
 
+import be.swsb.aoc2019.InputMode.Companion.inputModeFrom
 import java.lang.IllegalArgumentException
 
 sealed class Instruction {
-    data class Addition(val parameter1Mode: InputMode, val parameter2Mode: InputMode, val parameter1: Int? = null, val parameter2: Int? = null) : Instruction() {
+    data class Addition(val parameter1Mode: InputMode,
+                        val parameter2Mode: InputMode,
+                        val parameter1: Int? = null,
+                        val parameter2: Int? = null,
+                        val destination: Address? = null) : Instruction() {
         fun loadParam1(memory: Memory): Addition {
             val valueAtMemory = memory[memory.pointer, parameter1Mode].value
             return this.copy(parameter1 = valueAtMemory)
@@ -12,6 +17,16 @@ sealed class Instruction {
         fun loadParam2(memory: Memory): Addition {
             val valueAtMemory = memory[memory.pointer, parameter2Mode].value
             return this.copy(parameter2 = valueAtMemory)
+        }
+
+        fun loadDestination(memory: Memory): Addition {
+            val valueAtMemory = memory[memory.pointer].value
+            return this.copy(destination = Address(valueAtMemory))
+        }
+
+        fun execute(memory: Memory): Memory {
+            val result = this.parameter1!! + this.parameter2!!
+            return memory.set(this.destination!!, IntCode(result)).increasePointer()
         }
     }
 
@@ -33,12 +48,6 @@ sealed class Instruction {
                 inputModeFrom(inputString.getOrNull(inputString.length - 5) ?: '0')
             }
             return Addition(inputMode1, inputMode2)
-        }
-
-        private fun inputModeFrom(c: Char): InputMode = when (c) {
-            '0' -> InputMode.PositionMode
-            '1' -> InputMode.Immediate
-            else -> throw IllegalArgumentException("Could not parse $c into an InputMode")
         }
 
         private fun requirePositionMode(errorMessage: String, block: () -> InputMode) {

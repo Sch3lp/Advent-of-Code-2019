@@ -1,5 +1,8 @@
 package be.swsb.aoc2019
 
+import be.swsb.aoc2019.Instruction.Addition
+import be.swsb.aoc2019.Instruction.Companion.instructionFromIntCode
+
 
 fun solve(intCodes: List<String>): Int {
     val memory: Memory = parseIntoMemory(intCodes.map { it.toInt() })
@@ -14,11 +17,6 @@ fun solve(intCodes: List<String>): Int {
     return 0
 }
 
-enum class InputMode {
-    PositionMode,
-    Immediate
-}
-
 fun partiallyExecute(memory: Memory, currentInstruction: Instruction?): Pair<Memory, Instruction?> {
     // memory -> state
     // gradually build up an instruction
@@ -26,16 +24,26 @@ fun partiallyExecute(memory: Memory, currentInstruction: Instruction?): Pair<Mem
 
     val (updatedInstruction, updatedMemory) = if (currentInstruction != null) {
         when (currentInstruction) {
-            is Instruction.Addition -> {
-                currentInstruction.loadParam1(memory)
-                .loadParam2(memory.increasePointer()) to memory.increasePointer().increasePointer()
+            is Addition -> {
+                completeAndExecuteAddition(currentInstruction, memory)
             }
             else -> throw IllegalStateException("TODO other instructions")
         }
     } else {
-        Instruction.instructionFromIntCode(memory[memory.pointer]) to memory.increasePointer()
+        instructionFromIntCode(memory[memory.pointer]) to memory.increasePointer()
     }
     return updatedMemory to updatedInstruction
 }
+
+private fun completeAndExecuteAddition(currentInstruction: Addition, memory: Memory): Pair<Addition?, Memory> {
+    val (instruction, newMemory) = completeAddition(currentInstruction, memory)
+    return null to instruction.execute(newMemory)
+}
+
+private fun completeAddition(currentInstruction: Addition, memory: Memory) =
+        currentInstruction
+                .loadParam1(memory)
+                .loadParam2(memory.increasePointer())
+                .loadDestination(memory.increasePointer().increasePointer()) to memory.increasePointer().increasePointer().increasePointer()
 
 

@@ -42,16 +42,13 @@ class Day5Test {
         @Test
         internal fun `partiallyExecute | gradually parses into an Instruction and executes it`() {
             val memory = memory(1001, 5, -1, 3, 1002, 2)
-            val memoryAfterAddition = memory(1001, 5, -1, 1, 1002, 2)
+            val memoryAfterAddition = memory(1001, 5, -1, 1, 1002, 2).pointerAt(5)
 
             assertThat(partiallyExecute(memory, null))
                     .isEqualTo(memory.pointerAt(1) to Addition(PositionMode, Immediate))
 
             assertThat(partiallyExecute(memory.increasePointer(), Addition(PositionMode, Immediate)))
-                    .isEqualTo(memory.pointerAt(3) to Addition(PositionMode, Immediate, 2, -1))
-//
-//            assertThat(partiallyExecute(memory, Addition(PositionMode(5), ImmediateMode(-1), PositionMode(3))))
-//                    .isEqualTo(memoryAfterAddition to Multiplication())
+                    .isEqualTo(memoryAfterAddition to null)
         }
 
     }

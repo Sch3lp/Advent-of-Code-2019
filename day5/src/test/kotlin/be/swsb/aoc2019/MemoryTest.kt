@@ -36,13 +36,13 @@ class MemoryTest {
     @Test
     internal fun `get | with Mode returns value from memory depending on mode`() {
         val memory = memory(1, 20, 30, 40, 50)
-        assertThat(memory[0, PositionMode].value).isEqualTo(20)
+        assertThat(memory[Address(0), PositionMode].value).isEqualTo(20)
     }
 
     @Test
-    internal fun `get | with Position Mode and negative value, throws exception`() {
-        val memory = memory(1, 20, 30, 40, 50)
-        assertThatExceptionOfType(IllegalArgumentException::class.java)
-                .isThrownBy { memory[-1, PositionMode] }
+    internal fun `Address | overloads plus()`() {
+        assertThat(Address(1) + 2).isEqualTo(Address(3))
+        assertThat(Address(0) + 1).isEqualTo(Address(1))
+        assertThat(Address(1) + 0).isEqualTo(Address(1))
     }
 }
