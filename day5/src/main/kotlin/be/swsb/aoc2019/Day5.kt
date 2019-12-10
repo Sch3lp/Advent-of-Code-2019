@@ -87,12 +87,12 @@ enum class InputMode {
 
 sealed class Instruction {
     data class Addition(val parameter1Mode: InputMode, val parameter2Mode: InputMode, val parameter1: Int? = null, val parameter2: Int? = null) : Instruction() {
-        fun loadParam1(memory: Memory): Instruction {
+        fun loadParam1(memory: Memory): Addition {
             val valueAtMemory = memory[memory.pointer, parameter1Mode].value
             return this.copy(parameter1 = valueAtMemory)
         }
 
-        fun loadParam2(memory: Memory): Instruction {
+        fun loadParam2(memory: Memory): Addition {
             val valueAtMemory = memory[memory.pointer, parameter2Mode].value
             return this.copy(parameter2 = valueAtMemory)
         }
@@ -139,17 +139,18 @@ fun partiallyExecute(memory: Memory, currentInstruction: Instruction?): Pair<Mem
     // gradually build up an instruction
     // when it's _complete_, execute it and apply it to memory
 
-    val updatedInstruction = if (currentInstruction != null) {
+    val (updatedInstruction, updatedMemory) = if (currentInstruction != null) {
         when (currentInstruction) {
             is Instruction.Addition -> {
                 currentInstruction.loadParam1(memory)
+                .loadParam2(memory.increasePointer()) to memory.increasePointer().increasePointer()
             }
-            else -> throw IllegalStateException("TODO")
+            else -> throw IllegalStateException("TODO other instructions")
         }
     } else {
-        Instruction.instructionFromIntCode(memory[memory.pointer])
+        Instruction.instructionFromIntCode(memory[memory.pointer]) to memory.increasePointer()
     }
-    return memory.increasePointer() to updatedInstruction
+    return updatedMemory to updatedInstruction
 }
 
 
