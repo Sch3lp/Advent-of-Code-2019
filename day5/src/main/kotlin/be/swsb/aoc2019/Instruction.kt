@@ -52,9 +52,10 @@ sealed class Instruction {
         }
 
         fun execute(memory: Memory): Memory {
-            val result = this.parameter1!! * this.parameter2!!
-            return memory.set(this.destination!!, IntCode(result)).increasePointer()
+            return memory.set(this.destination!!, IntCode(executeOperation())).increasePointer()
         }
+
+        private fun executeOperation(): Int = parameter1!! * parameter2!!
     }
 
     companion object {
