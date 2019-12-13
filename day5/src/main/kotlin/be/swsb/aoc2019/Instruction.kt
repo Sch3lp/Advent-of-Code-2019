@@ -68,23 +68,23 @@ sealed class Instruction {
         }
 
         private fun additionFromString(inputString: String): Addition {
+            val (inputMode1, inputMode2) = operationFromString(inputString)
+            return Addition(inputMode1, inputMode2)
+        }
+
+        private fun multiplicationFromString(inputString: String): Multiplication {
+            val (inputMode1, inputMode2) = operationFromString(inputString)
+            return Multiplication(inputMode1, inputMode2)
+        }
+
+        private fun operationFromString(inputString: String): Pair<InputMode, InputMode> {
             if (inputString.length > 5) throw IllegalArgumentException("Could not parse $inputString into an Addition")
             val inputMode1 = inputModeFrom(inputString.getOrNull(inputString.length - 3) ?: '0')
             val inputMode2 = inputModeFrom(inputString.getOrNull(inputString.length - 4) ?: '0')
             requirePositionMode("Destination should always be in PositionMode") {
                 inputModeFrom(inputString.getOrNull(inputString.length - 5) ?: '0')
             }
-            return Addition(inputMode1, inputMode2)
-        }
-
-        private fun multiplicationFromString(inputString: String): Multiplication {
-            if (inputString.length > 5) throw IllegalArgumentException("Could not parse $inputString into an Multiplication")
-            val inputMode1 = inputModeFrom(inputString.getOrNull(inputString.length - 3) ?: '0')
-            val inputMode2 = inputModeFrom(inputString.getOrNull(inputString.length - 4) ?: '0')
-            requirePositionMode("Destination should always be in PositionMode") {
-                inputModeFrom(inputString.getOrNull(inputString.length - 5) ?: '0')
-            }
-            return Multiplication(inputMode1, inputMode2)
+            return Pair(inputMode1, inputMode2)
         }
 
         private fun requirePositionMode(errorMessage: String, block: () -> InputMode) {
