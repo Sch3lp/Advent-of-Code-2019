@@ -2,6 +2,7 @@ package be.swsb.aoc2019
 
 import be.swsb.aoc2019.Instruction.Addition
 import be.swsb.aoc2019.Instruction.Companion.instructionFromIntCode
+import be.swsb.aoc2019.Instruction.Multiplication
 
 
 fun solve(intCodes: List<String>): Int {
@@ -27,6 +28,9 @@ fun partiallyExecute(memory: Memory, currentInstruction: Instruction?): Pair<Mem
             is Addition -> {
                 completeAndExecuteAddition(currentInstruction, memory)
             }
+            is Multiplication -> {
+                completeAndExecuteMultiplication(currentInstruction, memory)
+            }
             else -> throw IllegalStateException("TODO other instructions")
         }
     } else {
@@ -40,7 +44,18 @@ private fun completeAndExecuteAddition(currentInstruction: Addition, memory: Mem
     return null to instruction.execute(newMemory)
 }
 
+private fun completeAndExecuteMultiplication(currentInstruction: Multiplication, memory: Memory): Pair<Addition?, Memory> {
+    val (instruction, newMemory) = completeMultiplication(currentInstruction, memory)
+    return null to instruction.execute(newMemory)
+}
+
 private fun completeAddition(currentInstruction: Addition, memory: Memory) =
+        currentInstruction
+                .loadParam1(memory)
+                .loadParam2(memory.increasePointer())
+                .loadDestination(memory.increasePointer().increasePointer()) to memory.increasePointer().increasePointer().increasePointer()
+
+private fun completeMultiplication(currentInstruction: Multiplication, memory: Memory) =
         currentInstruction
                 .loadParam1(memory)
                 .loadParam2(memory.increasePointer())

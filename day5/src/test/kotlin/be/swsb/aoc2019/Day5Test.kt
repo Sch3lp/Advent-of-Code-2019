@@ -3,6 +3,7 @@ package be.swsb.aoc2019
 import be.swsb.aoc2019.InputMode.Immediate
 import be.swsb.aoc2019.InputMode.PositionMode
 import be.swsb.aoc2019.Instruction.Addition
+import be.swsb.aoc2019.Instruction.Multiplication
 import be.swsb.aoc2019.common.Files.csvLines
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Nested
@@ -40,7 +41,7 @@ class Day5Test {
         currentInstruction = Multiplication
          */
         @Test
-        internal fun `partiallyExecute | gradually parses into an Instruction and executes it`() {
+        internal fun `partiallyExecute | gradually parses into an Addition and executes it`() {
             val memory = memory(1001, 5, -1, 3, 1002, 2)
             val memoryAfterAddition = memory(1001, 5, -1, 1, 1002, 2).pointerAt(5)
 
@@ -49,6 +50,18 @@ class Day5Test {
 
             assertThat(partiallyExecute(memory.increasePointer(), Addition(PositionMode, Immediate)))
                     .isEqualTo(memoryAfterAddition to null)
+        }
+
+        @Test
+        internal fun `partiallyExecute | gradually parses into a Multiplication and executes it`() {
+            val memory = memory(1002, 5, -4, 3, 1002, 2)
+            val memoryAfterMultiplication = memory(1002, 5, -4, -8, 1002, 2).pointerAt(5)
+
+            assertThat(partiallyExecute(memory, null))
+                    .isEqualTo(memory.pointerAt(1) to Multiplication(PositionMode, Immediate))
+
+            assertThat(partiallyExecute(memory.increasePointer(), Multiplication(PositionMode, Immediate)))
+                    .isEqualTo(memoryAfterMultiplication to null)
         }
 
     }

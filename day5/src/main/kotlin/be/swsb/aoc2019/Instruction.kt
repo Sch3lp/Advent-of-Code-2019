@@ -25,7 +25,34 @@ sealed class Instruction {
         }
 
         fun execute(memory: Memory): Memory {
-            val result = this.parameter1!! + this.parameter2!!
+            return memory.set(this.destination!!, IntCode(executeOperation())).increasePointer()
+        }
+
+        private fun executeOperation(): Int = parameter1!! + parameter2!!
+    }
+
+    data class Multiplication(val parameter1Mode: InputMode,
+                        val parameter2Mode: InputMode,
+                        val parameter1: Int? = null,
+                        val parameter2: Int? = null,
+                        val destination: Address? = null) : Instruction() {
+        fun loadParam1(memory: Memory): Multiplication {
+            val valueAtMemory = memory[memory.pointer, parameter1Mode].value
+            return this.copy(parameter1 = valueAtMemory)
+        }
+
+        fun loadParam2(memory: Memory): Multiplication {
+            val valueAtMemory = memory[memory.pointer, parameter2Mode].value
+            return this.copy(parameter2 = valueAtMemory)
+        }
+
+        fun loadDestination(memory: Memory): Multiplication {
+            val valueAtMemory = memory[memory.pointer].value
+            return this.copy(destination = Address(valueAtMemory))
+        }
+
+        fun execute(memory: Memory): Memory {
+            val result = this.parameter1!! * this.parameter2!!
             return memory.set(this.destination!!, IntCode(result)).increasePointer()
         }
     }
@@ -33,9 +60,9 @@ sealed class Instruction {
     companion object {
         fun instructionFromIntCode(input: IntCode): Instruction {
             val intCode = input.toString()
-            val opCode = input.opCode
-            return when (opCode) {
+            return when (input.opCode) {
                 "01" -> additionFromString(intCode)
+                "02" -> multiplicationFromString(intCode)
                 else -> throw IllegalArgumentException("Could not parse $intCode into an Instruction")
             }
         }
@@ -48,6 +75,16 @@ sealed class Instruction {
                 inputModeFrom(inputString.getOrNull(inputString.length - 5) ?: '0')
             }
             return Addition(inputMode1, inputMode2)
+        }
+
+        private fun multiplicationFromString(inputString: String): Multiplication {
+            if (inputString.length > 5) throw IllegalArgumentException("Could not parse $inputString into an Multiplication")
+            val inputMode1 = inputModeFrom(inputString.getOrNull(inputString.length - 3) ?: '0')
+            val inputMode2 = inputModeFrom(inputString.getOrNull(inputString.length - 4) ?: '0')
+            requirePositionMode("Destination should always be in PositionMode") {
+                inputModeFrom(inputString.getOrNull(inputString.length - 5) ?: '0')
+            }
+            return Multiplication(inputMode1, inputMode2)
         }
 
         private fun requirePositionMode(errorMessage: String, block: () -> InputMode) {
