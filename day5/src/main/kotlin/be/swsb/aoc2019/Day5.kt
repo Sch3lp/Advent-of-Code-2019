@@ -1,10 +1,5 @@
 package be.swsb.aoc2019
 
-import be.swsb.aoc2019.Instruction.Addition
-import be.swsb.aoc2019.Instruction.Companion.instructionFromIntCode
-import be.swsb.aoc2019.Instruction.Multiplication
-
-
 fun solve(intCodes: List<String>): Int {
     val memory: Memory = parseIntoMemory(intCodes.map { it.toInt() })
     partiallyExecute(memory, null)
@@ -25,11 +20,8 @@ fun partiallyExecute(memory: Memory, currentInstruction: Instruction?): Pair<Mem
 
     val (updatedInstruction, updatedMemory) = if (currentInstruction != null) {
         when (currentInstruction) {
-            is Addition -> {
-                completeAndExecuteAddition(currentInstruction, memory)
-            }
-            is Multiplication -> {
-                completeAndExecuteMultiplication(currentInstruction, memory)
+            is Operation -> {
+                completeAndExecuteOperation(currentInstruction, memory)
             }
             else -> throw IllegalStateException("TODO other instructions")
         }
@@ -39,23 +31,12 @@ fun partiallyExecute(memory: Memory, currentInstruction: Instruction?): Pair<Mem
     return updatedMemory to updatedInstruction
 }
 
-private fun completeAndExecuteAddition(currentInstruction: Addition, memory: Memory): Pair<Addition?, Memory> {
-    val (instruction, newMemory) = completeAddition(currentInstruction, memory)
+private fun completeAndExecuteOperation(currentInstruction: Operation, memory: Memory): Pair<Operation?, Memory> {
+    val (instruction, newMemory) = completeOperation(currentInstruction, memory)
     return null to instruction.execute(newMemory)
 }
 
-private fun completeAndExecuteMultiplication(currentInstruction: Multiplication, memory: Memory): Pair<Addition?, Memory> {
-    val (instruction, newMemory) = completeMultiplication(currentInstruction, memory)
-    return null to instruction.execute(newMemory)
-}
-
-private fun completeAddition(currentInstruction: Addition, memory: Memory) =
-        currentInstruction
-                .loadParam1(memory)
-                .loadParam2(memory.increasePointer())
-                .loadDestination(memory.increasePointer().increasePointer()) to memory.increasePointer().increasePointer().increasePointer()
-
-private fun completeMultiplication(currentInstruction: Multiplication, memory: Memory) =
+private fun completeOperation(currentInstruction: Operation, memory: Memory) =
         currentInstruction
                 .loadParam1(memory)
                 .loadParam2(memory.increasePointer())

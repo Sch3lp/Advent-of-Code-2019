@@ -2,8 +2,6 @@ package be.swsb.aoc2019
 
 import be.swsb.aoc2019.InputMode.Immediate
 import be.swsb.aoc2019.InputMode.PositionMode
-import be.swsb.aoc2019.Instruction.Addition
-import be.swsb.aoc2019.Instruction.Multiplication
 import be.swsb.aoc2019.common.Files.csvLines
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Nested
@@ -22,19 +20,19 @@ class Day5Test {
 
         parse "1001"
         memory = "1001", "100", "-1", "3", "1002", ..., 3
-        currentInstruction = Addition(PositionMode, ImmediateMode)
+        currentInstruction = Operation.addition(, ImmediateMod)
 
         parse "100"
         memory = "1001", "100", "-1", "3", "1002", ..., 3
-        currentInstruction = Addition(Address(100))
+        currentInstruction = Operation.addition(100)
 
         parse "-1"
         memory = "1001", "100", "-1", "3", "1002", ..., 3
-        currentInstruction = Addition(Address(100),Value(-1))
+        currentInstruction = Operation.addition(100),Value(-1)
 
         parse "3"
         memory = "1001", "100", "-1", "2", "1002", ..., 3
-        currentInstruction = Addition(Address(100),Value(-1),DestinationAt(3))
+        currentInstruction = Operation.addition(100),Value(-1),DestinationAt(3)
 
         parse "1002"
         memory = "1001", "100", "-1", "2", "1002", ..., 3
@@ -46,9 +44,9 @@ class Day5Test {
             val memoryAfterAddition = memory(1001, 5, -1, 1, 1002, 2).pointerAt(5)
 
             assertThat(partiallyExecute(memory, null))
-                    .isEqualTo(memory.pointerAt(1) to Addition(PositionMode, Immediate))
+                    .isEqualTo(memory.pointerAt(1) to Operation.addition(PositionMode, Immediate))
 
-            assertThat(partiallyExecute(memory.increasePointer(), Addition(PositionMode, Immediate)))
+            assertThat(partiallyExecute(memory.increasePointer(), Operation.addition(PositionMode, Immediate)))
                     .isEqualTo(memoryAfterAddition to null)
         }
 
@@ -58,9 +56,9 @@ class Day5Test {
             val memoryAfterMultiplication = memory(1002, 5, -4, -8, 1002, 2).pointerAt(5)
 
             assertThat(partiallyExecute(memory, null))
-                    .isEqualTo(memory.pointerAt(1) to Multiplication(PositionMode, Immediate))
+                    .isEqualTo(memory.pointerAt(1) to Operation.multiplication(PositionMode, Immediate))
 
-            assertThat(partiallyExecute(memory.increasePointer(), Multiplication(PositionMode, Immediate)))
+            assertThat(partiallyExecute(memory.increasePointer(), Operation.multiplication(PositionMode, Immediate)))
                     .isEqualTo(memoryAfterMultiplication to null)
         }
 
